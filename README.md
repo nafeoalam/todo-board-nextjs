@@ -1,5 +1,3 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
-
 ## Getting Started
 
 First, run the development server:
@@ -14,23 +12,27 @@ pnpm dev
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## ToDo Board PostgreSQL Setup
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+This guide provides instructions for setting up a PostgreSQL database for a ToDo Board application using Docker.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+### Prerequisites
 
-## Learn More
+- Docker Desktop for Mac
 
-To learn more about Next.js, take a look at the following resources:
+### Installation Steps
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+#### Step 1: Install Docker
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+If Docker is not yet installed on your Mac:
 
-## Deploy on Vercel
+- Download Docker Desktop for Mac [here](https://hub.docker.com/editions/community/docker-ce-desktop-mac/).
+- Follow the installation instructions to install Docker.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+#### Step 2: Run PostgreSQL with Docker
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Run the following command to pull the PostgreSQL image and run it:
+
+```bash
+docker pull postgres
+docker run --name todo-postgres -e POSTGRES_USER=your_username -e POSTGRES_PASSWORD=your_password -e POSTGRES_DB=todo_board -p 5432:5432 -d postgres
