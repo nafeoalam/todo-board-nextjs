@@ -35,4 +35,13 @@ Run the following command to pull the PostgreSQL image and run it:
 
 ```bash
 docker pull postgres
-docker run --name todo-postgres -e POSTGRES_USER=your_username -e POSTGRES_PASSWORD=your_password -e POSTGRES_DB=todo_board -p 5432:5432 -d postgres
+yarn db:up
+```
+
+Go to PostgreSQL interactive mode
+
+
+```bash
+docker exec -it [container_id_or_name] psql -U your_username -d db_name
+
+```

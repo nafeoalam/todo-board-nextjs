@@ -5,8 +5,8 @@ services:
     image: postgres
     restart: always
     environment:
-      POSTGRES_PASSWORD: nafeo
-      POSTGRES_USER: 1234
+      POSTGRES_PASSWORD: 1234
+      POSTGRES_USER: nafeo
       POSTGRES_DB: todo-postgres
     ports:
       - "5432:5432"
