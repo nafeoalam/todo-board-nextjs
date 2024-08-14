@@ -43,5 +43,4 @@ Go to PostgreSQL interactive mode
 
 ```bash
 docker exec -it [container_id_or_name] psql -U your_username -d db_name
-
 ```
