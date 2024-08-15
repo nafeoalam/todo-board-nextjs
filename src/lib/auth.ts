@@ -1,11 +1,21 @@
 import { SignJWT, jwtVerify } from "jose";
+import jwt from "jsonwebtoken";
+
 import { NextRequest, NextResponse } from "next/server";
+import { NextApiRequest, NextApiResponse, NextApiHandler } from "next";
+interface ExtendedApiRequest extends NextApiRequest {
+  user?: JwtPayload | string;
+}
+interface JwtPayload {
+  id: number;
+  username: string;
+}
 import { cookies } from "next/headers";
 
 const secretKey = process.env.SESSION_SECRET;
 const key = new TextEncoder().encode(secretKey);
 
-export async function encrypt(payload: any) {
+async function encrypt(payload: any) {
   return new SignJWT(payload)
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
@@ -13,7 +23,7 @@ export async function encrypt(payload: any) {
     .sign(key);
 }
 
-export async function decrypt(input: string): Promise<any> {
+async function decrypt(input: string): Promise<any> {
   try {
     const { payload } = await jwtVerify(input, key, {
       algorithms: ["HS256"],
