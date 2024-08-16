@@ -1,23 +1,45 @@
 import { NextRequest, NextResponse } from "next/server";
-import { updateSession } from "@/lib/auth";
-import { logMiddleware } from "@/lib/middlewares/logMiddleware";
-import { authMiddleware } from "@/lib/middlewares/authMiddleware";
+import { tokenVerification } from "./lib/middlewares/tokenVerification";
 
 export async function middleware(request: NextRequest) {
-  if (request.url.includes("/api/")) {
-    if (request.url.includes("/api/tickets")) {
-      const logResult = logMiddleware(request);
-      console.log(`Log: ${logResult.response}`);
-    }
+  const { pathname } = request.nextUrl;
+  // Exclude /api/login and /api/register from middleware
+  if (
+    pathname.startsWith("/api/login") ||
+    pathname.startsWith("/api/register")
+  ) {
+    return NextResponse.next();
+  }
 
-    const authResult = authMiddleware(request);
-    if (!authResult?.isValid) {
-      return new NextResponse(JSON.stringify({ message: "Unauthorized" }), {
-        status: 401,
-      });
+  // Check for authorization token in headers
+  const token = request.headers.get("cookie")?.split("=")[1] || "";
+
+  // If no token is found, redirect to login page
+  if (!token) {
+    return NextResponse.redirect(new URL("/authentication", request.url));
+  }
+
+  try {
+    const isTokenValid = await tokenVerification(token);
+
+    if (isTokenValid) {
+      console.log(isTokenValid);
+      // Allow the request to proceed if the token is valid
+      if (pathname.startsWith("/authentication")) {
+        return NextResponse.redirect(new URL("/", request.url));
+      }
+      return NextResponse.next();
+    } else {
+      return NextResponse.redirect(new URL("/authentication", request.url));
     }
-    return
-  } else {
-    return await updateSession(request);
+  } catch (error) {
+    console.log(error);
+    // If token verification fails, redirect to login page
+    return NextResponse.redirect(new URL("/authentication", request.url));
   }
 }
+
+// Specify the paths where the middleware should run
+export const config = {
+  matcher: ["/api/:path*", "/dashboard/:path*"],
+};

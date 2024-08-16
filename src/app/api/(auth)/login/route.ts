@@ -1,12 +1,15 @@
 import { NextResponse } from "next/server";
-import type { NextApiRequest } from "next";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { query } from "@/lib/db";
+import { cookies } from "next/headers";
 
-// POST /api/auth/login
+
+// POST /api/login
 export const POST = async (request: Request) => {
   const requestBody = await request.json();
+
+  console.log(process.env.JWT_SECRET, 'process.env.JWT_SECRET');
 
   const { username, password } = requestBody;
   try {
@@ -17,6 +20,7 @@ export const POST = async (request: Request) => {
       const token = jwt.sign({ userId: rows[0].id }, process.env.JWT_SECRET!, {
         expiresIn: "1h",
       });
+      cookies().set("token", token);
       return new NextResponse(JSON.stringify({ token }), {
         status: 200,
       });
