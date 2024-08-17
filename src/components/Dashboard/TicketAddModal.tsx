@@ -1,4 +1,4 @@
-// components/TicketFormModal.tsx
+// components/TicketAddModal.tsx
 import { getCategories, ICategory } from "@/services/categoryService";
 import React, { useState, useEffect } from "react";
 
@@ -13,7 +13,7 @@ interface Props {
   }) => void;
 }
 
-const TicketFormModal: React.FC<Props> = ({ isOpen, onClose, onSubmit }) => {
+const TicketAddModal: React.FC<Props> = ({ isOpen, onClose, onSubmit }) => {
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [expiry_date, setExpiryDate] = useState<string>(
@@ -128,4 +128,4 @@ const TicketFormModal: React.FC<Props> = ({ isOpen, onClose, onSubmit }) => {
   );
 };
 
-export default TicketFormModal;
+export default TicketAddModal;

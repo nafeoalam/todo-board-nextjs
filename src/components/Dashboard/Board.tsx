@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { ITicket } from ".";
 import { createTicket, updateTicket } from "@/services/ticketService";
 import TicketCard from "./TicketCard";
-import TicketFormModal from "./TicketFormModal";
+import TicketAddModal from "./TicketAddModal";
 
 interface BoardPros {
   allTickets: ITicket[];
@@ -34,24 +34,6 @@ function Board({ allTickets }: Readonly<BoardPros>) {
       console.error("Error updating ticket:", error);
     }
   };
-
-  // const handleAddTicket = async (status: string) => {
-  //   const newTicket: ITicket = {
-  //     title: "New Ticket",
-  //     description: "Enter description...",
-  //     expiry_date: new Date().toISOString().split("T")[0], // Set today's date as default
-  //     status: status,
-  //     category_id: 1,
-  //   };
-
-  //   try {
-  //     const createdTicket = await createTicket(newTicket);
-  //     // Update local state with the ticket returned from the server
-  //     setTickets((prevTickets) => [...prevTickets, createdTicket]);
-  //   } catch (error) {
-  //     console.error("Error adding new ticket:", error);
-  //   }
-  // };
 
   const handleAddTicket = async (ticketData: {
     title: string;
@@ -96,7 +78,7 @@ function Board({ allTickets }: Readonly<BoardPros>) {
 
   return (
     <div className="board">
-      <TicketFormModal
+      <TicketAddModal
         isOpen={isModalOpen}
         onClose={() => setModalOpen(false)}
         onSubmit={handleAddTicket}
@@ -109,7 +91,9 @@ function Board({ allTickets }: Readonly<BoardPros>) {
           onDragOver={handleDragOver}
         >
           {status === "Open" && (
-            <button className="float-right" onClick={() => setModalOpen(true)}>+</button>
+            <button className="float-right" onClick={() => setModalOpen(true)}>
+              +
+            </button>
           )}
           <h2>{status}</h2>
 
