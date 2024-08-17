@@ -1,6 +1,5 @@
 import { query } from "@/lib/db";
 import { NextResponse } from "next/server";
-import type { NextApiRequest, NextApiResponse } from "next";
 
 // GET /api/categories/:id
 export const GET = async (request: Request, context: { params: any }) => {

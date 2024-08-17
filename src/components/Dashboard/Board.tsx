@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { ITicket } from ".";
 import { createTicket, updateTicket } from "@/services/ticketService";
 import TicketCard from "./TicketCard";
+import TicketFormModal from "./TicketFormModal";
 
 interface BoardPros {
   allTickets: ITicket[];
@@ -10,17 +11,18 @@ interface BoardPros {
 
 function Board({ allTickets }: Readonly<BoardPros>) {
   const [tickets, setTickets] = useState<ITicket[]>(allTickets);
+  const [isModalOpen, setModalOpen] = useState<boolean>(false);
 
   // Function to handle ticket updates
   const handleTicketUpdate = async (ticketId: string, newStatus: string) => {
-
-    const originalTicket = tickets.find((ticket) => ticket.id === Number(ticketId));
+    const originalTicket = tickets.find(
+      (ticket) => ticket.id === Number(ticketId)
+    );
     if (!originalTicket || originalTicket.status === newStatus) return;
-
 
     const updatedTicket = { ...originalTicket, status: newStatus };
 
-    console.log({updatedTicket});
+    console.log({ updatedTicket });
     try {
       const serverUpdatedTicket = await updateTicket(ticketId, updatedTicket);
       setTickets((prev) =>
@@ -33,18 +35,36 @@ function Board({ allTickets }: Readonly<BoardPros>) {
     }
   };
 
-  const handleAddTicket = async (status: string) => {
-    const newTicket: ITicket = {
-      title: "New Ticket",
-      description: "Enter description...",
-      expiry_date: new Date().toISOString().split("T")[0], // Set today's date as default
-      status: status,
-      category_id: 1,
-    };
+  // const handleAddTicket = async (status: string) => {
+  //   const newTicket: ITicket = {
+  //     title: "New Ticket",
+  //     description: "Enter description...",
+  //     expiry_date: new Date().toISOString().split("T")[0], // Set today's date as default
+  //     status: status,
+  //     category_id: 1,
+  //   };
 
+  //   try {
+  //     const createdTicket = await createTicket(newTicket);
+  //     // Update local state with the ticket returned from the server
+  //     setTickets((prevTickets) => [...prevTickets, createdTicket]);
+  //   } catch (error) {
+  //     console.error("Error adding new ticket:", error);
+  //   }
+  // };
+
+  const handleAddTicket = async (ticketData: {
+    title: string;
+    description: string;
+    expiry_date: string;
+    category_id: number;
+  }) => {
+    setModalOpen(false); // Close modal upon submission
     try {
-      const createdTicket = await createTicket(newTicket);
-      // Update local state with the ticket returned from the server
+      const createdTicket = await createTicket({
+        ...ticketData,
+        status: "Open",
+      });
       setTickets((prevTickets) => [...prevTickets, createdTicket]);
     } catch (error) {
       console.error("Error adding new ticket:", error);
@@ -76,6 +96,11 @@ function Board({ allTickets }: Readonly<BoardPros>) {
 
   return (
     <div className="board">
+      <TicketFormModal
+        isOpen={isModalOpen}
+        onClose={() => setModalOpen(false)}
+        onSubmit={handleAddTicket}
+      />
       {statuses.map((status) => (
         <div
           key={status}
@@ -85,7 +110,7 @@ function Board({ allTickets }: Readonly<BoardPros>) {
         >
           <h2>{status}</h2>
           {status === "Open" && (
-            <button onClick={() => handleAddTicket(status)}>Add</button>
+            <button onClick={() => setModalOpen(true)}>Add</button>
           )}
           <div className="column-content">
             {tickets
