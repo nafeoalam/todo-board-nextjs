@@ -6,6 +6,7 @@ import TicketCard from "./TicketCard";
 import TicketAddModal from "./TicketAddModal";
 import TicketEditModal from "./TicketEditModal";
 
+const statuses = ["Open", "In Progress", "Resolved", "Closed"];
 interface BoardPros {
   allTickets: ITicket[];
 }
@@ -102,7 +103,7 @@ function Board({ allTickets }: Readonly<BoardPros>) {
     }
   };
 
-  const statuses = ["Open", "In Progress", "Resolved", "Closed"];
+  
 
   return (
     <div className="board">
