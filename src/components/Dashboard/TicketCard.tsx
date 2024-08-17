@@ -1,6 +1,7 @@
 // components/TicketCard.tsx
 import React from "react";
 import { ITicket } from ".";
+import { formatDate } from "@/lib/utils";
 
 interface TicketCardProps {
   ticket: ITicket;
@@ -13,7 +14,7 @@ const TicketCard: React.FC<TicketCardProps> = ({ ticket, onDragStart }) => {
       <h3>{ticket.title}</h3>
       <p>{ticket.description}</p>
       <div className="meta">
-        <span className="expiry-date">{ticket.expiry_date}</span>
+        <span className="expiry-date">{formatDate(ticket.expiry_date)}</span>
         <span className="status">{ticket.status}</span>
       </div>
     </div>

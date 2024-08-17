@@ -11,8 +11,11 @@ export default function Page() {
   };
 
   return (
-    <div>
-      <button onClick={toggleForm}>
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
+      <button
+        onClick={toggleForm}
+        className="mb-4 font-semibold"
+      >
         {isLogin ? "Need an account? Register" : "Have an account? Login"}
       </button>
       {isLogin ? <Login /> : <Register />}

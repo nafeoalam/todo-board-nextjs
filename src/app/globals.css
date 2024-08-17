@@ -19,7 +19,7 @@
 
 .column h2 {
   text-align: center;
-  margin-bottom: 10px;
+  margin-bottom: 15px;
 }
 
 .ticket-card {
@@ -53,7 +53,7 @@ button {
   background-color: #007bff;
   color: white;
   border: none;
-  padding: 8px 12px;
+  padding: 4px 12px;
   border-radius: 4px;
   cursor: pointer;
   margin-bottom: 10px;
@@ -63,30 +63,3 @@ button:hover {
   background-color: #0056b3;
 }
 
-.modal {
-  position: fixed; /* Positioned relative to the viewport, which means it always stays in the same place even if the page is scrolled */
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5); /* Black background with opacity */
-  display: flex;
-  justify-content: center; /* Center horizontally */
-  align-items: center; /* Center vertically */
-  z-index: 1000; /* High z-index to ensure it sits on top of other content */
-}
-
-.modal-content {
-  background-color: white;
-  padding: 20px;
-  border-radius: 5px;
-  width: auto; /* Adjust width or set max-width as necessary */
-  max-width: 500px; /* Maximum width */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: Adds shadow to the modal */
-}
-
-.close {
-  float: right;
-  font-size: 28px;
-  cursor: pointer;
-}

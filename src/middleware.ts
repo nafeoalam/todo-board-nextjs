@@ -14,6 +14,10 @@ export async function middleware(request: NextRequest) {
   // Check for authorization token in headers
   const token = request.headers.get("cookie")?.split("=")[1] || "";
 
+  if (pathname.startsWith("/authentication")) {
+    return NextResponse.redirect(new URL("/dashboard", request.url));
+  }
+
   // If no token is found, redirect to login page
   if (!token) {
     return NextResponse.redirect(new URL("/authentication", request.url));

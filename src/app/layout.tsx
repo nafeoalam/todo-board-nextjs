@@ -1,7 +1,15 @@
+"use client";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import Footer from "@/components/Layout/Footer";
-import Header from "@/components/Layout/Header";
+import dynamic from "next/dynamic";
+import { AuthProvider } from "@/components/Auth/AuthContext";
+
+const Header = dynamic(() => import("@/components/Layout/Header"), {
+  ssr: false,
+});
+const Footer = dynamic(() => import("@/components/Layout/Footer"), {
+  ssr: false,
+});
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -13,15 +21,17 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <div className="flex flex-container flex-col p-4 justify-between  min-h-screen">
-          <div className="flex-2">
-            <Header />
+        <AuthProvider>
+          <div className="flex flex-container flex-col p-4 justify-between  min-h-screen">
+            <div className="flex-4">
+              <Header />
+            </div>
+            <div className="flex-4 flex-grow">{children}</div>
+            <div className="flex-4">
+              <Footer />
+            </div>
           </div>
-          <div className="flex-8 flex-grow ">{children}</div>
-          <div className="flex-2">
-            <Footer />
-          </div>
-        </div>
+        </AuthProvider>
       </body>
     </html>
   );

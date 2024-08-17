@@ -108,10 +108,11 @@ function Board({ allTickets }: Readonly<BoardPros>) {
           onDrop={(e) => handleDrop(e, status)}
           onDragOver={handleDragOver}
         >
-          <h2>{status}</h2>
           {status === "Open" && (
-            <button onClick={() => setModalOpen(true)}>Add</button>
+            <button className="float-right" onClick={() => setModalOpen(true)}>+</button>
           )}
+          <h2>{status}</h2>
+
           <div className="column-content">
             {tickets
               .filter((ticket) => ticket.status === status)

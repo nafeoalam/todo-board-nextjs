@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { query } from "@/lib/db";
-import { cookies } from "next/headers";
 
 // POST /api/register
 export const POST = async (request: Request) => {
