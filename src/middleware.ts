@@ -23,7 +23,6 @@ export async function middleware(request: NextRequest) {
     const isTokenValid = await tokenVerification(token);
 
     if (isTokenValid) {
-      console.log(isTokenValid);
       // Allow the request to proceed if the token is valid
       if (pathname.startsWith("/authentication")) {
         return NextResponse.redirect(new URL("/", request.url));

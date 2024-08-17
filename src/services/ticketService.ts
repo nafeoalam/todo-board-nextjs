@@ -1,12 +1,11 @@
 import { ITicket } from "@/components/Dashboard";
 import axiosInstance from "../lib/axios";
 
-export const getTickets = async (token: string): Promise<ITicket[]> => {
+export const getTickets = async (token?: string): Promise<ITicket[]> => {
   try {
+    const headers = token ? { Cookie: `token=${token}` } : {};
     const response = await axiosInstance.get<ITicket[]>("/tickets", {
-      headers: {
-        Cookie: `token=${token}`,
-      },
+      headers,
     });
     return response.data;
   } catch (error) {
@@ -28,6 +27,8 @@ export const updateTicket = async (
   ticketData: ITicket
 ): Promise<ITicket> => {
   try {
+    console.log(id);
+    console.log(ticketData);
     const response = await axiosInstance.put<ITicket>(
       `/tickets/${id}`,
       ticketData

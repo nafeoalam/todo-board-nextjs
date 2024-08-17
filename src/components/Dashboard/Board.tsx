@@ -11,43 +11,30 @@ interface BoardPros {
 function Board({ allTickets }: Readonly<BoardPros>) {
   const [tickets, setTickets] = useState<ITicket[]>(allTickets);
 
-  const handleTicketUpdate = async (updatedTicket: ITicket) => {
+  // Function to handle ticket updates
+  const handleTicketUpdate = async (ticketId: string, newStatus: string) => {
+
+    const originalTicket = tickets.find((ticket) => ticket.id === Number(ticketId));
+    if (!originalTicket || originalTicket.status === newStatus) return;
+
+
+    const updatedTicket = { ...originalTicket, status: newStatus };
+
+    console.log({updatedTicket});
     try {
-      // Optimistically update the UI
-      setTickets((prevTickets) =>
-        prevTickets.map((ticket) =>
-          ticket.id === updatedTicket.id ? updatedTicket : ticket
-        )
-      );
-
-      // Update the server and get the updated data back
-      const updatedTicketFromServer = await updateTicket(
-        updatedTicket.id,
-        updatedTicket
-      );
-
-      // Confirm the update locally with server-approved data
-      setTickets((prevTickets) =>
-        prevTickets.map((ticket) =>
-          ticket.id === updatedTicketFromServer.id
-            ? updatedTicketFromServer
-            : ticket
+      const serverUpdatedTicket = await updateTicket(ticketId, updatedTicket);
+      setTickets((prev) =>
+        prev.map((ticket) =>
+          ticket.id === Number(ticketId) ? serverUpdatedTicket : ticket
         )
       );
     } catch (error) {
       console.error("Error updating ticket:", error);
-      // Optionally revert the UI changes if the server update fails
-      setTickets((prevTickets) =>
-        prevTickets.map((ticket) =>
-          ticket.id === updatedTicket.id ? { ...ticket } : updatedTicket
-        )
-      );
     }
   };
 
   const handleAddTicket = async (status: string) => {
     const newTicket: ITicket = {
-      id: `${Date.now()}`, // Temporary ID; real ID should come from the server
       title: "New Ticket",
       description: "Enter description...",
       expiry_date: new Date().toISOString().split("T")[0], // Set today's date as default
@@ -64,48 +51,50 @@ function Board({ allTickets }: Readonly<BoardPros>) {
     }
   };
 
-  function handleDragStart(
+  // Drag and drop handlers
+  const handleDragStart = (
     e: React.DragEvent<HTMLDivElement>,
-    ticket: ITicket
-  ) {
-    e.dataTransfer.setData("ticketId", ticket.id);
-  }
+    ticketId: string
+  ) => {
+    e.dataTransfer.setData("ticketId", ticketId);
+  };
 
-  function handleDrop(e: React.DragEvent<HTMLDivElement>, newCategory: string) {
-    // e.preventDefault();
-    // const ticketId = e.dataTransfer.getData("ticketId");
-    // const ticket = tickets.find((t) => t.id === ticketId);
-    // if (ticket && ticket.category !== newCategory) {
-    //   handleTicketUpdate({ ...ticket, cate: newCategory });
-    // }
-  }
-
-
-  function handleDragOver(e: React.DragEvent<HTMLDivElement>) {
+  const handleDrop = (
+    e: React.DragEvent<HTMLDivElement>,
+    newStatus: string
+  ) => {
     e.preventDefault();
-  }
+    const ticketId = e.dataTransfer.getData("ticketId");
+    handleTicketUpdate(ticketId, newStatus);
+  };
 
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+  };
 
-  const statuses = ["Open", "In Progress", "Code Review", "Resolved"];
+  const statuses = ["Open", "In Progress", "Resolved", "Closed"];
 
   return (
     <div className="board">
       {statuses.map((status) => (
-        <div key={status} className="column">
+        <div
+          key={status}
+          className="column"
+          onDrop={(e) => handleDrop(e, status)}
+          onDragOver={handleDragOver}
+        >
           <h2>{status}</h2>
-          <button onClick={() => handleAddTicket(status)}>Add</button>
-          <div
-            className="column-content"
-            onDrop={(e) => handleDrop(e, status)}
-            onDragOver={handleDragOver}
-          >
+          {status === "Open" && (
+            <button onClick={() => handleAddTicket(status)}>Add</button>
+          )}
+          <div className="column-content">
             {tickets
               .filter((ticket) => ticket.status === status)
               .map((ticket) => (
                 <TicketCard
                   key={ticket.id}
                   ticket={ticket}
-                  onDragStart={(e) => handleDragStart(e, ticket)}
+                  onDragStart={(e) => handleDragStart(e, String(ticket.id))}
                 />
               ))}
           </div>

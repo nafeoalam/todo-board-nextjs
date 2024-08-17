@@ -9,7 +9,6 @@ import { cookies } from "next/headers";
 export const POST = async (request: Request) => {
   const requestBody = await request.json();
 
-  console.log(process.env.JWT_SECRET, 'process.env.JWT_SECRET');
 
   const { username, password } = requestBody;
   try {

@@ -4,7 +4,6 @@ import { NextResponse } from "next/server";
 // GET /api/tickets
 export const GET = async () => {
 
-  console.log('GET');
   try {
     const result = await query("SELECT * FROM tickets;");
     return new NextResponse(JSON.stringify(result.rows), {
