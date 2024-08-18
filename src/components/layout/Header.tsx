@@ -34,14 +34,14 @@ function Header() {
                 Categories
               </span>
             </Link>
-          </div>
 
-          <button
-            onClick={handleLogout}
-            className="bg-red-500 hover:bg-red-700 text-white px-3 py-2 rounded transition duration-300 ease-in-out"
-          >
-            Logout
-          </button>
+            <button
+              onClick={handleLogout}
+              className="bg-red-500 hover:bg-red-700 text-white px-3 py-2 rounded transition duration-300 ease-in-out"
+            >
+              Logout
+            </button>
+          </div>
         </div>
       )}
     </header>

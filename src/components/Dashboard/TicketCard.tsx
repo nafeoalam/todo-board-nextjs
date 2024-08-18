@@ -1,4 +1,3 @@
-// components/TicketCard.tsx
 import React from "react";
 import { ITicket } from ".";
 import { formatDate } from "@/lib/utils";

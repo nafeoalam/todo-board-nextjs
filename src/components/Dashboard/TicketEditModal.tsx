@@ -1,4 +1,3 @@
-// components/TicketEditModal.tsx
 import React, { useState, useEffect } from "react";
 import { ITicket } from ".";
 
@@ -15,17 +14,26 @@ const TicketEditModal: React.FC<TicketEditModalProps> = ({
   onClose,
   onSave,
 }) => {
-  const [title, setTitle] = useState<string>(ticket.title);
-  const [description, setDescription] = useState<string>(ticket.description);
-  const [expiryDate, setExpiryDate] = useState<string>(ticket.expiry_date);
+  const localStorageKey = `edit-ticket-${ticket.id}`;
+  const storedData = localStorage.getItem(localStorageKey) || "{}";
+  const localJson = JSON.parse(storedData);
+
+  const [title, setTitle] = useState<string>(localJson?.title || ticket.title);
+  const [description, setDescription] = useState<string>(
+    localJson?.description || ticket.description
+  );
+  const [expiryDate, setExpiryDate] = useState<string>(
+    localJson?.expiry_date || ticket.expiry_date
+  );
 
   useEffect(() => {
-    if (ticket) {
-      setTitle(ticket.title);
-      setDescription(ticket.description);
-      setExpiryDate(ticket.expiry_date);
-    }
-  }, [ticket, isOpen]);
+    const data = JSON.stringify({ title, description, expiryDate });
+    localStorage.setItem(localStorageKey, data);
+  }, [title, description, expiryDate]);
+
+  const clearLocalStorage = () => {
+    localStorage.removeItem(localStorageKey);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,6 +45,7 @@ const TicketEditModal: React.FC<TicketEditModalProps> = ({
     };
     try {
       await onSave(updatedTicket);
+      clearLocalStorage();
       onClose();
     } catch (error) {
       console.error("Error updating ticket:", error);
@@ -50,7 +59,9 @@ const TicketEditModal: React.FC<TicketEditModalProps> = ({
       <div className="bg-white p-8 rounded-lg shadow-lg max-w-sm w-full m-4">
         <span
           className="top-4 right-4 text-3xl cursor-pointer float-end"
-          onClick={onClose}
+          onClick={() => {
+            onClose();
+          }}
         >
           &times;
         </span>
