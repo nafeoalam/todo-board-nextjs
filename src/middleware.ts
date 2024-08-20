@@ -1,22 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { tokenVerification } from "./lib/middlewares/tokenVerification";
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  // Exclude /api/login and /api/register from middleware
-  if (
-    pathname.startsWith("/api/login") ||
-    pathname.startsWith("/api/register")
-  ) {
-    return NextResponse.next();
-  }
 
   // Check for authorization token in headers
   const token = request.headers.get("cookie")?.split("=")[1] || "";
-
-  if (pathname.startsWith("/authentication")) {
-    return NextResponse.redirect(new URL("/dashboard", request.url));
-  }
 
   // If no token is found, redirect to login page
   if (!token) {
@@ -24,9 +12,20 @@ export async function middleware(request: NextRequest) {
   }
 
   try {
-    const isTokenValid = await tokenVerification(token);
+    const response = await fetch(
+      new URL("/api/verify-token", request.url).toString(),
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ token }),
+      }
+    );
 
-    if (isTokenValid) {
+    const data = await response.json();
+
+    if (data?.valid) {
       // Allow the request to proceed if the token is valid
       if (pathname.startsWith("/authentication")) {
         return NextResponse.redirect(new URL("/", request.url));
@@ -44,5 +43,5 @@ export async function middleware(request: NextRequest) {
 
 // Specify the paths where the middleware should run
 export const config = {
-  matcher: ["/api/:path*", "/dashboard/:path*"],
+  matcher: ["/api/categories/:path*", "/api/tickets/:path*"],
 };

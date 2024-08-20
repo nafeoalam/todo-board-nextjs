@@ -3,7 +3,6 @@ import { useState, useContext, FormEvent } from "react";
 
 import { AuthContext } from "@/components/Auth/AuthContext";
 import axios from "axios";
-import { useRouter } from "next/navigation";
 
 interface LoginResponse {
   token: string;
@@ -16,8 +15,6 @@ function Login() {
   const [error, setError] = useState<string>("");
   const auth = useContext(AuthContext);
 
-  const router = useRouter();
-
   const handleLogin = async (e: FormEvent) => {
     e.preventDefault();
     try {
@@ -28,8 +25,7 @@ function Login() {
 
       auth?.login()
       setError("");
-
-      router.push("/dashboard");
+      window.location.href = '/dashboard';
     } catch (err: any) {
       setError("Login failed. Please check your credentials and try again.");
     }

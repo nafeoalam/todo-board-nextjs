@@ -2,6 +2,7 @@ import React from "react";
 import Board from "./Board";
 import { getTickets } from "@/services/ticketService";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
 
 export interface ITicket {
   id?: number;
@@ -15,7 +16,12 @@ export interface ITicket {
 async function Dashboard() {
   const cookieStore = cookies();
   const token = cookieStore.get("token")?.value ?? "";
-  const tickets = await getTickets(token);
+  let tickets: ITicket[] = [];
+  try {
+    tickets = await getTickets(token);
+  } catch (err) {
+    redirect('/authentication')
+  }
 
   return (
     <div>

@@ -3,11 +3,16 @@ import axiosInstance from "../lib/axios";
 
 export const getTickets = async (token?: string): Promise<ITicket[]> => {
   try {
-    const headers = token ? { Cookie: `token=${token}` } : {};
-    const response = await axiosInstance.get<ITicket[]>("/tickets", {
-      headers,
-    });
-    return response.data;
+    if (token) {
+      const headers = token ? { Cookie: `token=${token}` } : {};
+
+      const response = await axiosInstance.get<ITicket[]>("/tickets", {
+        headers,
+      });
+      return response.data;
+    } else {
+      throw new Error("Unauthorized");
+    }
   } catch (error) {
     throw new Error("Failed to fetch tickets");
   }
@@ -27,8 +32,6 @@ export const updateTicket = async (
   ticketData: ITicket
 ): Promise<ITicket> => {
   try {
-    console.log(id);
-    console.log(ticketData);
     const response = await axiosInstance.put<ITicket>(
       `/tickets/${id}`,
       ticketData

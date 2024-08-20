@@ -1,25 +1,30 @@
-"use client"
+"use client";
 import React, { useState } from "react";
 import { ICategory, createCategory } from "@/services/categoryService";
 
 const Category: React.FC = () => {
   const [name, setName] = useState<string>("");
   const [description, setDescription] = useState<string>("");
+  const [message, setMessage] = useState<string>(""); 
+  const [isError, setIsError] = useState<boolean>(false); 
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     const newCategory: ICategory = { name, description };
+    setMessage(""); 
+    setIsError(false);
 
     try {
       const createdCategory = await createCategory(newCategory);
       console.log("Category created successfully:", createdCategory);
-      // Optionally reset the form or give user feedback
+      setMessage("Category created successfully!");
+      // Optionally reset the form
       setName("");
       setDescription("");
-      // You might want to handle post-creation logic here (e.g., display a success message)
     } catch (error) {
       console.error("Error creating category:", error);
-      // Handle errors, possibly update UI to notify the user
+      setMessage("Error creating category. Please try again.");
+      setIsError(true); 
     }
   };
 
@@ -61,6 +66,14 @@ const Category: React.FC = () => {
         >
           Create Category
         </button>
+
+        <div
+          className={`mt-4 text-sm font-semibold ${
+            isError ? "text-red-500" : "text-green-500"
+          }`}
+        >
+          {message}
+        </div>
       </form>
     </div>
   );
