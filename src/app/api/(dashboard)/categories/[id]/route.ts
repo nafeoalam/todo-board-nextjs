@@ -5,6 +5,11 @@ import { NextResponse } from "next/server";
 export const GET = async (request: Request, context: { params: any }) => {
   try {
     const categoryId = context.params.id;
+
+    if (!categoryId || isNaN(Number(categoryId))) {
+      return new NextResponse('Invalid or missing "id" parameter', { status: 400 });
+    }
+    
     const result = await query("SELECT * FROM categories WHERE id = $1;", [
       categoryId,
     ]);
@@ -21,7 +26,10 @@ export const GET = async (request: Request, context: { params: any }) => {
       );
     }
   } catch (error: any) {
-    return new NextResponse("Error in fetching category" + error.message, {
+    if (error.message.includes("ECONNREFUSED")) {
+      return new NextResponse("Database connection error", { status: 500 });
+    }
+    return new NextResponse("Error in fetching category: " + error.message, {
       status: 500,
     });
   }

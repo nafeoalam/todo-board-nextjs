@@ -6,7 +6,33 @@ import { query } from "@/lib/db";
 export const POST = async (request: Request) => {
   const { username, password } = await request.json();
 
+  if (!username || !password) {
+    return new NextResponse(
+      JSON.stringify({ message: "Username and password are required" }),
+      { status: 400 }
+    );
+  }
+
+  if (username.length < 3 || password.length < 6) {
+    return new NextResponse(
+      JSON.stringify({ message: "Invalid username or password" }),
+      { status: 400 }
+    );
+  }
+
   try {
+    const { rows: existingUsers } = await query(
+      "SELECT * FROM users WHERE username = $1",
+      [username]
+    );
+
+    if (existingUsers.length) {
+      return new NextResponse(
+        JSON.stringify({ message: "Username already taken" }),
+        { status: 409 }
+      );
+    }
+
     const hashedPassword = await bcrypt.hash(password, 10);
     const { rows } = await query(
       "INSERT INTO users(username, password) VALUES($1, $2) RETURNING *;",
