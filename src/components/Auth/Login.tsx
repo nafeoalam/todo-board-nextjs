@@ -1,13 +1,12 @@
 import { useState, useContext, FormEvent } from "react";
 
-
 import { AuthContext } from "@/components/Auth/AuthContext";
-import axios from "axios";
+import { getErrorMessage } from "@/lib";
+import { login } from "@/services/authService";
 
 interface LoginResponse {
   token: string;
 }
-
 
 function Login() {
   const [username, setUsername] = useState<string>("");
@@ -15,22 +14,20 @@ function Login() {
   const [error, setError] = useState<string>("");
   const auth = useContext(AuthContext);
 
-  const handleLogin = async (e: FormEvent) => {
+  const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      await axios.post<LoginResponse>("/api/login", {
-        username,
-        password,
-      });
+      await login(username, password);
 
-      auth?.login()
-      setError("");
-      window.location.href = '/dashboard';
+      auth?.login();
+      setError(""); // Clear any existing errors
+      window.location.href = "/dashboard"; // Redirect on successful login
     } catch (err: any) {
-      setError("Login failed. Please check your credentials and try again.");
+      const customDefaultMessage =
+        "Login failed. Please check your credentials and try again.";
+      setError(getErrorMessage(err, customDefaultMessage)); // Use error handling utility to provide a user-friendly error
     }
   };
-
 
   return (
     <div className="flex flex-col items-center justify-center bg-gray-100">
@@ -79,7 +76,9 @@ function Login() {
               Login
             </button>
             {error && (
-              <p className="text-red-500 text-xs italic mt-2">{error}</p>
+              <p className="text-red-500 text-xs italic mt-2 text-center">
+                {error}
+              </p>
             )}
           </form>
         )}

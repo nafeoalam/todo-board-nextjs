@@ -1,6 +1,6 @@
 import React from "react";
-import { ITicket } from ".";
-import { formatDate } from "@/lib/utils";
+import { formatDate } from "@/lib/";
+import { ITicket } from "@/lib/";
 interface TicketCardProps {
   ticket: ITicket;
   onDragStart: (e: React.DragEvent<HTMLDivElement>) => void;

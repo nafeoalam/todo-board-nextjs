@@ -1,10 +1,6 @@
 import { useState, FormEvent } from "react";
-import axios from "axios";
-
-interface RegisterResponse {
-  username: string;
-  id: number;
-}
+import { register } from "@/services/authService";
+import { getErrorMessage } from "@/lib";
 
 function Register() {
   const [username, setUsername] = useState<string>("");
@@ -12,17 +8,16 @@ function Register() {
   const [error, setError] = useState<string>("");
   const [success, setSuccess] = useState<boolean>(false);
 
-  const handleRegister = async (e: FormEvent) => {
+  const handleRegister = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const response = await axios.post<RegisterResponse>("/api/register", {
-        username,
-        password,
-      });
+      await register(username, password);
+
       setSuccess(true);
       setError("");
     } catch (err: any) {
-      setError("Failed to register. Please try again.");
+      const customDefaultMessage = "Failed to register. Please try again.";
+      setError(getErrorMessage(err, customDefaultMessage));
     }
   };
 

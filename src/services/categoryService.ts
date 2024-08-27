@@ -1,48 +1,51 @@
-// services/categoryService.ts
+import { ICategory } from "@/lib/";
 import axiosInstance from "../lib/axios";
-
-export interface ICategory {
-  id?: number;
-  name: string;
-  description: string;
-}
 
 // Fetch all categories
 export const getCategories = async (): Promise<ICategory[]> => {
-  try {
-    const response = await axiosInstance.get<ICategory[]>("/categories");
-    return response.data;
-  } catch (error) {
-    throw new Error("Failed to fetch categories");
-  }
+  const response = await axiosInstance
+    .get<ICategory[]>("/categories")
+    .catch((error) => {
+      console.error("Error fetching categories:", error);
+      throw new Error("Failed to fetch categories");
+    });
+  return response.data;
 };
 
 // Create a new category
-export const createCategory = async (categoryData: ICategory): Promise<ICategory> => {
-  try {
-    const response = await axiosInstance.post<ICategory>("/categories", categoryData);
-    return response.data;
-  } catch (error) {
-    throw new Error("Failed to create category");
-  }
+export const createCategory = async (
+  categoryData: ICategory
+): Promise<ICategory> => {
+  const response = await axiosInstance
+    .post<ICategory>("/categories", categoryData)
+    .catch((error) => {
+      console.error("Error creating category:", error);
+      throw new Error("Failed to create category");
+    });
+  return response.data;
 };
 
 // Fetch a single category by ID
 export const getCategoryById = async (id: number): Promise<ICategory> => {
-  try {
-    const response = await axiosInstance.get<ICategory>(`/categories/${id}`);
-    return response.data;
-  } catch (error) {
-    throw new Error("Failed to fetch category");
-  }
+  const response = await axiosInstance
+    .get<ICategory>(`/categories/${id}`)
+    .catch((error) => {
+      console.error("Error fetching category by ID:", error);
+      throw new Error("Failed to fetch category");
+    });
+  return response.data;
 };
 
 // Update an existing category
-export const updateCategory = async (id: number, categoryData: ICategory): Promise<ICategory> => {
-  try {
-    const response = await axiosInstance.put<ICategory>(`/categories/${id}`, categoryData);
-    return response.data;
-  } catch (error) {
-    throw new Error("Failed to update category");
-  }
+export const updateCategory = async (
+  id: number,
+  categoryData: ICategory
+): Promise<ICategory> => {
+  const response = await axiosInstance
+    .put<ICategory>(`/categories/${id}`, categoryData)
+    .catch((error) => {
+      console.error("Error updating category:", error);
+      throw new Error("Failed to update category");
+    });
+  return response.data;
 };

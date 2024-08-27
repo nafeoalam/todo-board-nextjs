@@ -1,10 +1,10 @@
 "use client";
 import React, { useState } from "react";
-import { ITicket } from ".";
 import { createTicket, updateTicket } from "@/services/ticketService";
 import TicketCard from "./TicketCard";
 import TicketAddModal from "./TicketAddModal";
 import TicketEditModal from "./TicketEditModal";
+import { ITicket } from "@/lib/";
 
 const statuses = ["Open", "In Progress", "Resolved", "Closed"];
 interface BoardPros {

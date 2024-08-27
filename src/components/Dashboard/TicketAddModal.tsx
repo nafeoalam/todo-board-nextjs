@@ -1,5 +1,6 @@
 // components/TicketAddModal.tsx
-import { getCategories, ICategory } from "@/services/categoryService";
+import { ICategory } from "@/lib/";
+import { getCategories } from "@/services/categoryService";
 import React, { useState, useEffect } from "react";
 
 interface Props {
@@ -16,7 +17,7 @@ interface Props {
 const TicketAddModal: React.FC<Props> = ({ isOpen, onClose, onSubmit }) => {
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
-  const [expiry_date, setExpiryDate] = useState<string>(
+  const [expiryDate, setExpiryDate] = useState<string>(
     new Date().toISOString().split("T")[0]
   );
   const [categories, setCategories] = useState<ICategory[]>([]);
@@ -58,7 +59,7 @@ const TicketAddModal: React.FC<Props> = ({ isOpen, onClose, onSubmit }) => {
             onSubmit({
               title,
               description,
-              expiry_date,
+              expiry_date: expiryDate,
               category_id: selectedCategory!,
             });
           }}
@@ -93,7 +94,7 @@ const TicketAddModal: React.FC<Props> = ({ isOpen, onClose, onSubmit }) => {
             </label>
             <input
               type="date"
-              value={expiry_date}
+              value={expiryDate}
               onChange={(e) => setExpiryDate(e.target.value)}
               required
               className="mt-1 p-2 w-full border rounded-md"

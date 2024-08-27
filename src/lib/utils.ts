@@ -26,3 +26,15 @@ export function formatDate(dateString: string) {
 
   return `${year}-${formattedMonth}-${formattedDay}`;
 }
+
+export const getErrorMessage = (
+  err: any,
+  defaultMsg: string = "An unexpected error occurred. Please try again."
+): string => {
+  return (
+    err?.response?.data?.message ||
+    err?.response?.statusText ||
+    err?.message ||
+    defaultMsg
+  );
+};

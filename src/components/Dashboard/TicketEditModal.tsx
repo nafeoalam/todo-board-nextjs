@@ -1,5 +1,5 @@
+import { ITicket } from "@/lib/";
 import React, { useState, useEffect } from "react";
-import { ITicket } from ".";
 
 interface TicketEditModalProps {
   ticket: ITicket;

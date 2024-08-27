@@ -3,15 +3,8 @@ import Board from "./Board";
 import { getTickets } from "@/services/ticketService";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { ITicket } from "@/lib/";
 
-export interface ITicket {
-  id?: number;
-  title: string;
-  description: string;
-  expiry_date: string;
-  category_id: number;
-  status: string;
-}
 
 async function Dashboard() {
   const cookieStore = cookies();

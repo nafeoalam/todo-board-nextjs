@@ -1,4 +1,4 @@
-import { query } from "@/lib/db";
+import { query } from "@/lib/";
 import { NextResponse } from "next/server";
 
 // GET /api/tickets

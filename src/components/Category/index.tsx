@@ -1,17 +1,18 @@
 "use client";
 import React, { useState } from "react";
-import { ICategory, createCategory } from "@/services/categoryService";
+import { createCategory } from "@/services/categoryService";
+import { ICategory } from "@/lib/";
 
 const Category: React.FC = () => {
   const [name, setName] = useState<string>("");
   const [description, setDescription] = useState<string>("");
-  const [message, setMessage] = useState<string>(""); 
-  const [isError, setIsError] = useState<boolean>(false); 
+  const [message, setMessage] = useState<string>("");
+  const [isError, setIsError] = useState<boolean>(false);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     const newCategory: ICategory = { name, description };
-    setMessage(""); 
+    setMessage("");
     setIsError(false);
 
     try {
@@ -24,7 +25,7 @@ const Category: React.FC = () => {
     } catch (error) {
       console.error("Error creating category:", error);
       setMessage("Error creating category. Please try again.");
-      setIsError(true); 
+      setIsError(true);
     }
   };
 

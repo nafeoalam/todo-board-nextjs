@@ -1,9 +1,8 @@
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { query } from "@/lib/db";
+import { query } from "@/lib";
 import { cookies } from "next/headers";
-import { error } from "console";
 
 // POST /api/login
 export const POST = async (request: Request) => {
@@ -30,8 +29,6 @@ export const POST = async (request: Request) => {
       { status: 500 }
     );
   }
-
-  console.log("HERE");
 
   try {
     const { rows } = await query("SELECT * FROM users WHERE username = $1", [
