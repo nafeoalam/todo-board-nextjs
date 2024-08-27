@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
-import { query } from "@/lib";
+import { query } from "@/lib/db";
 
 // POST /api/register
 export const POST = async (request: Request) => {

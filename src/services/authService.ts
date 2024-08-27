@@ -5,7 +5,7 @@ export const login = async (
   password: string
 ): Promise<void> => {
   const response = await axiosInstance
-    .post("/api/login", { username, password })
+    .post("/login", { username, password })
     .catch((error) => {
       console.error("Login service error:", error);
       throw error; // Rethrow to handle it in the component
@@ -19,7 +19,7 @@ export const register = async (
   password: string
 ): Promise<void> => {
   const response = await axiosInstance
-    .post("/api/register", { username, password })
+    .post("/register", { username, password })
     .catch((error) => {
       console.error("Register service error:", error);
       throw new Error("Failed to register. Please try again."); // Custom error message for rethrow

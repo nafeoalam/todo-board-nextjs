@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { query } from "@/lib";
+import { query } from "@/lib/db";
 import { cookies } from "next/headers";
 
 // POST /api/login
