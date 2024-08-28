@@ -3,7 +3,7 @@ import Board from "./Board";
 import { getTickets } from "@/services/ticketService";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import { ITicket } from "@/lib/";
+import { getErrorMessage, ITicket } from "@/lib/";
 
 
 async function Dashboard() {
@@ -13,6 +13,8 @@ async function Dashboard() {
   try {
     tickets = await getTickets(token);
   } catch (err) {
+    const error = getErrorMessage(err)
+    console.log(error, 'Dashboard');
     redirect('/authentication')
   }
 

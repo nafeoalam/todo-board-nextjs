@@ -14,7 +14,7 @@ function Header() {
 
       router.push("/authentication");
     } catch (err: any) {
-      console.error(err);
+      console.error(err, 'Header');
     }
   };
 

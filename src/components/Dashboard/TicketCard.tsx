@@ -5,12 +5,14 @@ interface TicketCardProps {
   ticket: ITicket;
   onDragStart: (e: React.DragEvent<HTMLDivElement>) => void;
   onEdit: () => void;
+  onHistoryView: () => void;
 }
 
 const TicketCard: React.FC<TicketCardProps> = ({
   ticket,
   onDragStart,
   onEdit,
+  onHistoryView,
 }) => {
   const expiryText = formatDate(ticket.expiry_date);
   let expiryClass = "";
@@ -31,13 +33,22 @@ const TicketCard: React.FC<TicketCardProps> = ({
     >
       <div className="flex justify-between items-center mb-4">
         <h3 className="text-lg font-semibold">{ticket.title}</h3>
-        <button
-          onClick={onEdit}
-          className="bg-blue-500 hover:bg-blue-600 text-white text-xs font-bold py-2 px-4 rounded"
-        >
-          Edit
-        </button>
+        <div>
+          <button
+            onClick={onEdit}
+            className="bg-blue-500 hover:bg-blue-600 text-white text-xs font-bold py-2 px-4 mr-2 rounded"
+          >
+            Edit
+          </button>
+          <button
+            onClick={onHistoryView}
+            className="bg-blue-500 hover:bg-blue-600 text-white text-xs font-bold py-2 px-4 rounded"
+          >
+            History
+          </button>
+        </div>
       </div>
+
       <p>{ticket.description}</p>
       <div className="flex justify-between items-center mt-4">
         <span className={`expiry-date ${expiryClass} text-sm font-medium`}>

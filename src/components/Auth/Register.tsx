@@ -1,23 +1,21 @@
 import { useState, FormEvent } from "react";
 import { register } from "@/services/authService";
-import { getErrorMessage } from "@/lib";
+import { useFormError } from "@/hooks/useFormError"; // Adjust the path as necessary
 
 function Register() {
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const [error, setError] = useState<string>("");
   const [success, setSuccess] = useState<boolean>(false);
+  const { error, setErrorMsg, clearError } = useFormError();
 
   const handleRegister = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       await register(username, password);
-
       setSuccess(true);
-      setError("");
+      clearError(); // Clear any existing errors on successful registration
     } catch (err: any) {
-      const customDefaultMessage = "Failed to register. Please try again.";
-      setError(getErrorMessage(err, customDefaultMessage));
+      setErrorMsg(err, "Failed to register. Please try again.");
     }
   };
 

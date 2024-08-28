@@ -1,4 +1,4 @@
-import { query } from "@/lib/";
+import { query } from "@/lib/db";
 import { NextResponse } from "next/server";
 
 // GET /api/tickets/:id
@@ -15,15 +15,10 @@ export const GET = async (request: Request, context: { params: any }) => {
     const result = await query("SELECT * FROM tickets WHERE id = $1;", [
       ticketId,
     ]);
-    if (result.rows.length > 0) {
-      return new NextResponse(JSON.stringify(result.rows[0]), {
-        status: 200,
-      });
-    } else {
-      return new NextResponse(JSON.stringify({ message: "Ticket not found" }), {
-        status: 404,
-      });
-    }
+
+    return new NextResponse(JSON.stringify(result.rows[0] || {}), {
+      status: 200,
+    });
   } catch (error: any) {
     if (error.message.includes("ECONNREFUSED")) {
       return new NextResponse("Database connection error", { status: 500 });

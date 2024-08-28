@@ -1,3 +1,5 @@
+import { Status } from "./enums";
+
 export interface ICategory {
   id?: number;
   name: string;
@@ -11,4 +13,13 @@ export interface ITicket {
   expiry_date: string;
   category_id: number;
   status: string;
+}
+
+export interface ITicketHistory {
+  id: number;
+  ticket_id: number;
+  previous_status: Status;
+  new_status: Status;
+  event_time: Date | string;
+  event_description: string;
 }

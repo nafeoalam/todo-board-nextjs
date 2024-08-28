@@ -2,9 +2,10 @@
 import React, { useState } from "react";
 import { createTicket, updateTicket } from "@/services/ticketService";
 import TicketCard from "./TicketCard";
-import TicketAddModal from "./TicketAddModal";
-import TicketEditModal from "./TicketEditModal";
-import { ITicket } from "@/lib/";
+import TicketAddModal from "./Modals/TicketAddModal";
+import TicketEditModal from "./Modals/TicketEditModal";
+import TicketHistoryModal from "./Modals/TicketHistoryModal";
+import { ITicket, ITicketHistory } from "@/lib/";
 
 const statuses = ["Open", "In Progress", "Resolved", "Closed"];
 interface BoardPros {
@@ -17,6 +18,11 @@ function Board({ allTickets }: Readonly<BoardPros>) {
   const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
   const [editingTicket, setEditingTicket] = useState<ITicket | null>(null);
 
+  const [isHistoryModalOpen, setIsHistoryModalOpen] = useState<boolean>(false);
+  const [historyTicketId, setHistoryTicketId] = useState<string | null>(
+    null
+  );
+
   // Function to handle ticket updates
   const handleTicketDrag = async (ticketId: string, newStatus: string) => {
     const originalTicket = tickets.find(
@@ -26,7 +32,6 @@ function Board({ allTickets }: Readonly<BoardPros>) {
 
     const updatedTicket = { ...originalTicket, status: newStatus };
 
-    console.log({ updatedTicket });
     try {
       const serverUpdatedTicket = await updateTicket(ticketId, updatedTicket);
       setTickets((prev) =>
@@ -83,6 +88,15 @@ function Board({ allTickets }: Readonly<BoardPros>) {
     setIsEditModalOpen(true); // Assuming you are reusing the modal open state
   };
 
+  const handleViewHistory = (ticketId: string) => {
+    setHistoryTicketId(ticketId);
+    setIsHistoryModalOpen(true);
+  };
+  const handleCloseHistoryModal = () => {
+    setIsHistoryModalOpen(false);
+    setHistoryTicketId(null);
+  };
+
   const handleTicketUpdate = async (updatedTicket: ITicket) => {
     try {
       // Call the update API service
@@ -103,8 +117,6 @@ function Board({ allTickets }: Readonly<BoardPros>) {
     }
   };
 
-  
-
   return (
     <div className="board">
       <TicketAddModal
@@ -122,6 +134,14 @@ function Board({ allTickets }: Readonly<BoardPros>) {
         />
       )}
 
+      {isHistoryModalOpen && historyTicketId && (
+        <TicketHistoryModal
+          ticketId={historyTicketId}
+          isOpen={isHistoryModalOpen}
+          onClose={handleCloseHistoryModal}
+        />
+      )}
+
       {statuses.map((status) => (
         <div
           key={status}
@@ -130,7 +150,10 @@ function Board({ allTickets }: Readonly<BoardPros>) {
           onDragOver={handleDragOver}
         >
           {status === "Open" && (
-            <button className="float-right" onClick={() => setIsModalOpen(true)}>
+            <button
+              className="float-right"
+              onClick={() => setIsModalOpen(true)}
+            >
               +
             </button>
           )}
@@ -145,6 +168,7 @@ function Board({ allTickets }: Readonly<BoardPros>) {
                   ticket={ticket}
                   onDragStart={(e) => handleDragStart(e, String(ticket.id))}
                   onEdit={() => handleEditTicket(ticket)}
+                  onHistoryView={() => handleViewHistory(String(ticket.id))}
                 />
               ))}
           </div>

@@ -1,4 +1,4 @@
-import { axiosInstance, ITicket } from "@/lib/";
+import { axiosInstance, ITicket, ITicketHistory } from "@/lib/";
 
 export const getTickets = async (token?: string): Promise<ITicket[]> => {
   if (!token) {
@@ -8,8 +8,7 @@ export const getTickets = async (token?: string): Promise<ITicket[]> => {
   const response = await axiosInstance
     .get<ITicket[]>("/tickets", { headers })
     .catch((error) => {
-      console.error("Error fetching tickets:", error);
-      throw new Error("Failed to fetch tickets");
+      throw new Error(error);
     });
   return response.data;
 };
@@ -33,6 +32,19 @@ export const updateTicket = async (
     .catch((error) => {
       console.error("Service error when updating ticket:", error);
       throw new Error("Failed to update ticket");
+    });
+  return response.data;
+};
+
+// Fetch a single category by ID
+export const getTicketHistoryById = async (
+  id: string
+): Promise<ITicketHistory[]> => {
+  const response = await axiosInstance
+    .get<ITicketHistory[]>(`/tickets/${id}/history`)
+    .catch((error) => {
+      console.error("Error fetching ticket history by ID:", error);
+      throw new Error("Failed to fetch ticket history");
     });
   return response.data;
 };

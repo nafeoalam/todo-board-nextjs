@@ -1,4 +1,4 @@
-import { query } from "@/lib/";
+import { query } from "@/lib/db";
 import { NextResponse } from "next/server";
 
 // GET /api/tickets
@@ -6,11 +6,7 @@ export const GET = async () => {
   try {
     const result = await query("SELECT * FROM tickets;");
 
-    if (!result.rows || result.rows.length === 0) {
-      return new NextResponse("No tickets found", { status: 404 });
-    }
-
-    return new NextResponse(JSON.stringify(result.rows), {
+    return new NextResponse(JSON.stringify(result.rows || []), {
       status: 200,
     });
   } catch (error: any) {
