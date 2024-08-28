@@ -6,13 +6,18 @@ export const POST = async (request: Request) => {
   const requestBody = await request.json();
   const { token } = requestBody;
 
-  const secret = process.env.JWT_SECRET || "55555";
+  const secret = process.env.JWT_SECRET;
 
   try {
-    jwt.verify(token, secret);
-    return new NextResponse(JSON.stringify({ valid: true }), { status: 200 });
+    if (secret) {
+      jwt.verify(token, secret);
+      return new NextResponse(JSON.stringify({ valid: true }), { status: 200 });
+    } else
+      return new NextResponse(
+        JSON.stringify({ valid: false, error: "Invalid token" }),
+        { status: 401 }
+      );
   } catch (error) {
-    console.error("Token verification failed:", error);
     return new NextResponse(
       JSON.stringify({ valid: false, error: "Invalid token" }),
       { status: 401 }

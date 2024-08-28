@@ -4,7 +4,7 @@ export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Check for authorization token in headers
-  const token = request.headers.get("cookie")?.split("=")[1] || "";
+  const token = request.headers.get("cookie")?.split("=")[1] ?? "";
 
   // If no token is found, redirect to login page
   if (!token) {
@@ -25,6 +25,8 @@ export async function middleware(request: NextRequest) {
 
     const data = await response.json();
 
+    console.log({ data });
+
     if (data?.valid) {
       // Allow the request to proceed if the token is valid
       if (pathname.startsWith("/authentication")) {
@@ -32,12 +34,20 @@ export async function middleware(request: NextRequest) {
       }
       return NextResponse.next();
     } else {
-      return NextResponse.redirect(new URL("/authentication", request.url));
+      const response = NextResponse.redirect(
+        new URL("/authentication", request.url)
+      );
+      response.cookies.set("token", "", { expires: new Date(0) });
+      return response;
     }
   } catch (error) {
     // console.log(error);
     // If token verification fails, redirect to login page
-    return NextResponse.redirect(new URL("/authentication", request.url));
+    const response = NextResponse.redirect(
+      new URL("/authentication", request.url)
+    );
+    response.cookies.set("token", "", { expires: new Date(0) });
+    return response;
   }
 }
 
