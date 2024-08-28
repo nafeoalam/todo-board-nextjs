@@ -15,6 +15,7 @@ function Register() {
       setSuccess(true);
       clearError(); // Clear any existing errors on successful registration
     } catch (err: any) {
+      console.log(err);
       setErrorMsg(err, "Failed to register. Please try again.");
     }
   };

@@ -22,7 +22,7 @@ export const register = async (
     .post("/register", { username, password })
     .catch((error) => {
       console.error("Register service error:", error);
-      throw new Error("Failed to register. Please try again."); // Custom error message for rethrow
+      throw error; // Custom error message for rethrow
     });
   return response.data;
 };

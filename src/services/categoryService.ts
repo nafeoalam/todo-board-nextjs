@@ -6,8 +6,7 @@ export const getCategories = async (): Promise<ICategory[]> => {
   const response = await axiosInstance
     .get<ICategory[]>("/categories")
     .catch((error) => {
-      console.error("Error fetching categories:", error);
-      throw new Error("Failed to fetch categories");
+      throw error;
     });
   return response.data;
 };
@@ -19,8 +18,7 @@ export const createCategory = async (
   const response = await axiosInstance
     .post<ICategory>("/categories", categoryData)
     .catch((error) => {
-      console.error("Error creating category:", error);
-      throw new Error("Failed to create category");
+      throw error;
     });
   return response.data;
 };
@@ -30,8 +28,7 @@ export const getCategoryById = async (id: number): Promise<ICategory> => {
   const response = await axiosInstance
     .get<ICategory>(`/categories/${id}`)
     .catch((error) => {
-      console.error("Error fetching category by ID:", error);
-      throw new Error("Failed to fetch category");
+      throw error;
     });
   return response.data;
 };
@@ -44,8 +41,7 @@ export const updateCategory = async (
   const response = await axiosInstance
     .put<ICategory>(`/categories/${id}`, categoryData)
     .catch((error) => {
-      console.error("Error updating category:", error);
-      throw new Error("Failed to update category");
+      throw error;
     });
   return response.data;
 };
