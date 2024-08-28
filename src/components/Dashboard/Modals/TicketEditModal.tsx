@@ -1,6 +1,7 @@
 import { ITicket } from "@/lib/";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useFormError } from "@/hooks/useFormError";
+import { TicketContext } from "../TicketContext";
 
 interface TicketEditModalProps {
   ticket: ITicket;
@@ -15,28 +16,51 @@ const TicketEditModal: React.FC<TicketEditModalProps> = ({
   onClose,
   onSave,
 }) => {
-  const localStorageKey = `edit-ticket-${ticket.id}`;
-  const storedData = localStorage.getItem(localStorageKey) || "{}";
-  const localJson = JSON.parse(storedData);
+  const cTickets = useContext(TicketContext);
 
-  const [title, setTitle] = useState<string>(localJson?.title || ticket.title);
+  const tempSavedTicket = cTickets?.ticketData.find(
+    (tick) => tick.id === ticket.id
+  );
+
+  const [title, setTitle] = useState<string>(
+    tempSavedTicket?.title || ticket.title
+  );
+
   const [description, setDescription] = useState<string>(
-    localJson?.description || ticket.description
+    tempSavedTicket?.description || ticket.description
   );
   const [expiryDate, setExpiryDate] = useState<string>(
-    localJson?.expiry_date || ticket.expiry_date
+    tempSavedTicket?.expiry_date || ticket.expiry_date
   );
 
   const { error, setErrorMsg, clearError } = useFormError();
 
   useEffect(() => {
-    const data = JSON.stringify({ title, description, expiryDate });
-    localStorage.setItem(localStorageKey, data);
-  }, [title, description, expiryDate]);
+    // This effect handles either updating an existing ticket or adding a new one
+    if (!cTickets?.ticketData || !ticket.id) return;
 
-  const clearLocalStorage = () => {
-    localStorage.removeItem(localStorageKey);
-  };
+    const tickets = cTickets.ticketData;
+    const existingTicketIndex = tickets.findIndex((t) => t.id === ticket.id);
+
+    let updatedTickets;
+
+    if (existingTicketIndex !== -1) {
+      // Update existing ticket
+      updatedTickets = tickets.map((t, index) =>
+        index === existingTicketIndex
+          ? { ...t, title, description, expiryDate }
+          : t
+      );
+    } else {
+      // Add new ticket if it doesn't exist
+      updatedTickets = [
+        ...tickets,
+        { id: ticket.id, title, description, expiry_date: expiryDate },
+      ];
+    }
+
+    cTickets.setTicketData(updatedTickets); // Update the context with new ticket data
+  }, [title, description, expiryDate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -49,7 +73,6 @@ const TicketEditModal: React.FC<TicketEditModalProps> = ({
     try {
       await onSave(updatedTicket);
       clearError();
-      clearLocalStorage();
       onClose();
     } catch (error) {
       setErrorMsg(error, "Error updating ticket: Please try again.");

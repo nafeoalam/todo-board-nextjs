@@ -5,9 +5,10 @@ import TicketCard from "./TicketCard";
 import TicketAddModal from "./Modals/TicketAddModal";
 import TicketEditModal from "./Modals/TicketEditModal";
 import TicketHistoryModal from "./Modals/TicketHistoryModal";
-import { ITicket, ITicketHistory } from "@/lib/";
+import { ITicket } from "@/lib/";
+import { TicketProvider } from "./TicketContext";
 
-const statuses = ["Open", "In Progress", "Resolved", "Closed"];
+const statuses = ["Open", "In Progress", "For Review", "Resolved", "Closed"];
 interface BoardPros {
   allTickets: ITicket[];
 }
@@ -19,9 +20,7 @@ function Board({ allTickets }: Readonly<BoardPros>) {
   const [editingTicket, setEditingTicket] = useState<ITicket | null>(null);
 
   const [isHistoryModalOpen, setIsHistoryModalOpen] = useState<boolean>(false);
-  const [historyTicketId, setHistoryTicketId] = useState<string | null>(
-    null
-  );
+  const [historyTicketId, setHistoryTicketId] = useState<string | null>(null);
 
   // Function to handle ticket updates
   const handleTicketDrag = async (ticketId: string, newStatus: string) => {
@@ -124,15 +123,16 @@ function Board({ allTickets }: Readonly<BoardPros>) {
         onClose={() => setIsModalOpen(false)}
         onSubmit={handleAddTicket}
       />
-
-      {isEditModalOpen && editingTicket && (
-        <TicketEditModal
-          ticket={editingTicket}
-          isOpen={isEditModalOpen}
-          onClose={() => setIsEditModalOpen(false)}
-          onSave={handleTicketUpdate}
-        />
-      )}
+      <TicketProvider>
+        {isEditModalOpen && editingTicket && (
+          <TicketEditModal
+            ticket={editingTicket}
+            isOpen={isEditModalOpen}
+            onClose={() => setIsEditModalOpen(false)}
+            onSave={handleTicketUpdate}
+          />
+        )}
+      </TicketProvider>
 
       {isHistoryModalOpen && historyTicketId && (
         <TicketHistoryModal

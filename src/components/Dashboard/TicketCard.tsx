@@ -32,17 +32,17 @@ const TicketCard: React.FC<TicketCardProps> = ({
       onDragStart={onDragStart}
     >
       <div className="flex justify-between items-center mb-4">
-        <h3 className="text-lg font-semibold">{ticket.title}</h3>
+        <h3 className="text-md font-semibold">{ticket.title}</h3>
         <div>
           <button
             onClick={onEdit}
-            className="bg-blue-500 hover:bg-blue-600 text-white text-xs font-bold py-2 px-4 mr-2 rounded"
+            className="bg-blue-500 hover:bg-blue-600 text-white text-xs font-bold py-2 px-2 mr-2 rounded"
           >
             Edit
           </button>
           <button
             onClick={onHistoryView}
-            className="bg-blue-500 hover:bg-blue-600 text-white text-xs font-bold py-2 px-4 rounded"
+            className="bg-blue-500 hover:bg-blue-600 text-white text-xs font-bold py-2 px-2 rounded"
           >
             History
           </button>

@@ -23,7 +23,7 @@ CREATE TABLE categories (
 );
 
 -- Create an ENUM type for ticket status
-CREATE TYPE ticket_status AS ENUM ('Open', 'In Progress', 'Resolved', 'Closed');
+CREATE TYPE ticket_status AS ENUM ('Open', 'In Progress', 'For Review', 'Resolved', 'Closed');
 
 -- Create tickets table
 CREATE TABLE tickets (

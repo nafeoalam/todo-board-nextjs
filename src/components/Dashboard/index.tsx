@@ -5,7 +5,6 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { getErrorMessage, ITicket } from "@/lib/";
 
-
 async function Dashboard() {
   const cookieStore = cookies();
   const token = cookieStore.get("token")?.value ?? "";
@@ -13,9 +12,9 @@ async function Dashboard() {
   try {
     tickets = await getTickets(token);
   } catch (err) {
-    const error = getErrorMessage(err)
-    console.log(error, 'Dashboard');
-    redirect('/authentication')
+    const error = getErrorMessage(err);
+    console.log(error, "Dashboard");
+    redirect("/authentication");
   }
 
   return (
