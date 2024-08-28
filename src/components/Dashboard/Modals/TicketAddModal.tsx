@@ -2,6 +2,7 @@
 import { ICategory } from "@/lib/";
 import { getCategories } from "@/services/categoryService";
 import React, { useState, useEffect } from "react";
+import { useFormError } from "@/hooks/useFormError";
 
 interface Props {
   isOpen: boolean;
@@ -22,6 +23,7 @@ const TicketAddModal: React.FC<Props> = ({ isOpen, onClose, onSubmit }) => {
   );
   const [categories, setCategories] = useState<ICategory[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<number>();
+  const { error, setErrorMsg, clearError } = useFormError();
 
   // Fetch categories on component mount
   useEffect(() => {
@@ -30,8 +32,9 @@ const TicketAddModal: React.FC<Props> = ({ isOpen, onClose, onSubmit }) => {
         const fetchedCategories = await getCategories();
         setCategories(fetchedCategories);
         setSelectedCategory(fetchedCategories[0]?.id);
+        clearError();
       } catch (error) {
-        console.error("Failed to fetch categories:", error);
+        setErrorMsg(error, "Failed to fetch categories");
       }
     };
 
@@ -52,6 +55,7 @@ const TicketAddModal: React.FC<Props> = ({ isOpen, onClose, onSubmit }) => {
           &times;
         </span>
         <h2 className="text-xl font-bold mb-6">New Ticket</h2>
+        {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
 
         <form
           onSubmit={(e) => {

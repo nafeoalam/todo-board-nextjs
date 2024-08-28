@@ -1,5 +1,6 @@
 import { ITicket } from "@/lib/";
 import React, { useState, useEffect } from "react";
+import { useFormError } from "@/hooks/useFormError";
 
 interface TicketEditModalProps {
   ticket: ITicket;
@@ -26,6 +27,8 @@ const TicketEditModal: React.FC<TicketEditModalProps> = ({
     localJson?.expiry_date || ticket.expiry_date
   );
 
+  const { error, setErrorMsg, clearError } = useFormError();
+
   useEffect(() => {
     const data = JSON.stringify({ title, description, expiryDate });
     localStorage.setItem(localStorageKey, data);
@@ -45,9 +48,11 @@ const TicketEditModal: React.FC<TicketEditModalProps> = ({
     };
     try {
       await onSave(updatedTicket);
+      clearError();
       clearLocalStorage();
       onClose();
     } catch (error) {
+      setErrorMsg(error, "Error updating ticket: Please try again.");
       console.error("Error updating ticket:", error);
     }
   };
@@ -108,6 +113,7 @@ const TicketEditModal: React.FC<TicketEditModalProps> = ({
           >
             Update Ticket
           </button>
+          {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
         </form>
       </div>
     </div>
