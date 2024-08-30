@@ -42,12 +42,12 @@ const TicketHistoryModal: React.FC<Props> = ({ ticketId, isOpen, onClose }) => {
           &times;
         </span>
         <h2 className="text-xl font-bold mb-6">Ticket History</h2>
-        <div className="space-y-4">
+        <div className="space-y-4 h-[500px] overflow-auto scroll-smooth">
           {loading ? (
             <p>Loading history...</p>
           ) : history.length > 0 ? (
             history.map((h) => (
-              <div key={h.id} className="p-4 shadow rounded bg-gray-100">
+              <div key={h.id} className="p-4 shadow rounded bg-gray-100 ">
                 <p>{h.event_description}</p>
               </div>
             ))

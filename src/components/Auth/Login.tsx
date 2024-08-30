@@ -2,7 +2,6 @@ import { useState, useContext, FormEvent } from "react";
 import { login } from "@/services/authService"; // Assuming you have a similar login function
 import { useFormError } from "@/hooks/useFormError";
 import { AuthContext } from "@/components/Auth/AuthContext";
-import { getErrorMessage } from "@/lib";
 function Login() {
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
